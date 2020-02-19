@@ -1,4 +1,4 @@
-const db = require('../data/schemes.db3');
+const db = require('../data/dbConfig.js');
 
 module.exports ={
     find,
@@ -6,32 +6,39 @@ module.exports ={
     findSteps,
     add,
     update,
-    remove
-}
+    remove,
+};
 
 function find(){
-    db('schemes');
+   return db('schemes');
 }
 
 function findById(id){
-    db('schemes')
+    return db('schemes')
         .where({ id })
         .first();
 }
 
 function add(scheme){
-    db('schemes')
+    return db('schemes')
         .insert(scheme, "id");
 }
 
 function update(changes, id){
-    db('schemes')
+   return db('schemes')
         .where({ id })
         .update(changes);
 }
 
 function remove(id){
-    db('schemes')
+  return  db('schemes')
     .where({ id })
     .del();
+}
+
+function findSteps(id){
+    return db('schemes as sc')
+        .join('steps as st', 'sc.Id', 'st.scheme_id')
+        .select('sc.Id', 'sc.scheme_name', 'st.step_number', 'st.instructions')
+        .where("scheme_id", id);
 }
